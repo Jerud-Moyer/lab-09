@@ -86,4 +86,37 @@ describe('recipe-lab routes', () => {
         });
       });
   });
+
+  it('should delete with delete', async() => {
+    const recipe = await Recipe.insert({
+      name: 'cookies',
+      directions: [
+        'preheat oven to 375',
+        'mix ingredients',
+        'put dough on cookie sheet',
+        'bake for 10 minutes'
+      ],
+    });
+
+    const response = await request(app)
+      .delete(`/api/v1/recipes/${recipe.id}`);
+
+    expect(response.body).toEqual(recipe);
+  });
+
+  it('gets a recipe by id', async() => {
+    const recipe = await Recipe.insert({
+      name: 'cookies',
+      directions: [
+        'preheat oven to 375',
+        'mix ingredients',
+        'put dough on cookie sheet',
+        'bake for 10 minutes'
+      ],
+    });
+
+    const response = await request(app)
+      .get(`/api/v1/recipes/${recipe.id}`);
+    expect(response.body).toEqual(recipe);
+  });
 });
