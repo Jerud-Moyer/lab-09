@@ -19,7 +19,10 @@ describe('recipe-lab routes', () => {
           'mix ingredients',
           'put dough on cookie sheet',
           'bake for 10 minutes'
-        ]
+        ],
+        ingredients: 
+          [{ chocolate: { amount: 1, measurement: 'tsp' } }, { beer: { amount: 9, measurement: 'pints' } }]
+
       })
       .then(res => {
         expect(res.body).toEqual({
@@ -30,7 +33,9 @@ describe('recipe-lab routes', () => {
             'mix ingredients',
             'put dough on cookie sheet',
             'bake for 10 minutes'
-          ]
+          ],
+          ingredients: 
+            [{ chocolate: { amount: 1, measurement: 'tsp' } }, { beer: { amount: 9, measurement: 'pints' } }]
         });
       });
   });
@@ -60,6 +65,8 @@ describe('recipe-lab routes', () => {
         'put dough on cookie sheet',
         'bake for 10 minutes'
       ],
+      ingredients: 
+          [{ chocolate: { amount: 1, measurement: 'tsp' } }]
     });
 
     return request(app)
@@ -71,7 +78,9 @@ describe('recipe-lab routes', () => {
           'mix ingredients',
           'put dough on cookie sheet',
           'bake for 10 minutes'
-        ]
+        ],
+        ingredients: 
+          [{ chocolate: { amount: 1, measurement: 'tsp' } }]
       })
       .then(res => {
         expect(res.body).toEqual({
@@ -82,7 +91,9 @@ describe('recipe-lab routes', () => {
             'mix ingredients',
             'put dough on cookie sheet',
             'bake for 10 minutes'
-          ]
+          ],
+          ingredients: 
+          [{ chocolate: { amount: 1, measurement: 'tsp' } }]
         });
       });
   });
