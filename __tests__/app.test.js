@@ -3,6 +3,7 @@ const pool = require('../lib/utils/pool');
 const request = require('supertest');
 const app = require('../lib/app');
 const Recipe = require('../lib/models/recipe');
+const Log = require('../lib/models/log');
 
 describe('recipe-lab routes', () => {
   beforeEach(() => {
@@ -129,5 +130,96 @@ describe('recipe-lab routes', () => {
     const response = await request(app)
       .get(`/api/v1/recipes/${recipe.id}`);
     expect(response.body).toEqual(recipe);
+  });
+
+  it('creates a log', () => {
+    return request(app)
+      .post('/api/v1/logs')
+      .send({
+        recipeId: 2,
+        dateOfEvent: '11/22/20',
+        notes: 'fud gud',
+        rating: '5 star'
+
+      })
+      .then(res => {
+        expect(res.body).toEqual({
+          id: expect.any(String),
+          recipeId: '2',
+          dateOfEvent: '11/22/20',
+          notes: 'fud gud',
+          rating: '5 star'
+        });
+      });
+  });
+
+  it('gets all logs', async() => {
+    const logs = await Promise.all([
+      { recipeId: 3, dateOfEvent: '09/05/2020', notes: 'notes', rating: '4 star' },
+      { recipeId: 4, dateOfEvent: '09/09/2020', notes: 'words', rating: '3 star' },
+      { recipeId: 5, dateOfEvent: '09/13/2020', notes: 'lies', rating: '1 star' }
+    ].map(log => Log.insert(log)));
+
+    return request(app)
+      .get('/api/v1/logs')
+      .then(res => {
+        logs.forEach(log => {
+          expect(res.body).toContainEqual(log);
+        });
+      });
+  });
+
+  it('updates a log by id', async() => {
+    const log = await Log.insert({
+      recipeId: 2,
+      dateOfEvent: '11/22/20',
+      notes: 'fud gud',
+      rating: '5 star'
+    });
+
+    return request(app)
+      .put(`/api/v1/logs/${log.id}`)
+      .send({
+        recipeId: 3,
+        dateOfEvent: '11/22/20',
+        notes: 'foood goood',
+        rating: '5 star'
+      })
+      .then(res => {
+        expect(res.body).toEqual({
+          id: expect.any(String),
+          recipeId: '3',
+          dateOfEvent: '11/22/20',
+          notes: 'foood goood',
+          rating: '5 star'
+        });
+      });
+  });
+
+  it('should delete a log with delete', async() => {
+    const log = await Log.insert({
+      recipeId: 3,
+      dateOfEvent: '11/22/20',
+      notes: 'foood goood',
+      rating: '5 star'
+    });
+
+    const response = await request(app)
+      .delete(`/api/v1/logs/${log.id}`);
+
+    expect(response.body).toEqual(log);
+  });
+
+  it('gets a log by id', async() => {
+    const log = await Log.insert({
+      recipeId: 3,
+      dateOfEvent: '11/22/20',
+      notes: 'foood goood',
+      rating: '5 star'
+    });
+
+    const response = await request(app)
+      .get(`/api/v1/logs/${log.id}`);
+    expect(response.body).toEqual(log);
   });
 });

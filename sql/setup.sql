@@ -5,12 +5,12 @@ CREATE TABLE recipes (
   id BIGINT GENERATED ALWAYS AS IDENTITY,
   name TEXT NOT NULL,
   directions TEXT[],
-  ingredients jsonb[]
+  ingredients JSONB[]
 );
 
 CREATE TABLE logs (
   id BIGINT GENERATED ALWAYS AS IDENTITY,
-  recipe_id BIGINT NOT NULL,
+  recipe_id BIGINT,
   date_of_event TEXT NOT NULL,
   notes TEXT,
   rating TEXT 
